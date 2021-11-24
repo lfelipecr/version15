@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_order_electronic_invoice_form" model="ir.ui.view">
+        <field name="name">pos.order.electronic.invoice.form</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_pos_order_invoice']" position="attributes">
+                   <attribute name="invisivle">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='products']" position="after">
+              <page string="Facturación electrónica" id="page_invoice_electronic">
+                  <group>
+                      <div>
+                          <span class="oe_inline" style="color:#07b1b8;font-size:16px"><strong>Datos de envío: </strong> </span>
+                      </div>
+                        <group style="width: 25%">
+                            <field name="tipo_documento" />
+                            <field name="sequence" />
+                            <field name="number_electronic" />
+                        </group>
+                        <group style="width: 41%">
+                            <field name="date_issuance" />
+                            <field name="state_tributacion" style="color:#24e112"/>
+                            <field name="reference_code_id" invisible="1"/>
+                            <field name="pos_order_id" invisible="1"/>
+                        </group>
+                  </group>
+                  <group>
+                      <div>
+                          <span class="oe_inline" style="color:#0972a2;font-size:16px"><strong>XML: </strong> </span>
+                      </div>
+                      <group style="width: 65%">
+                          <field name="fname_xml_comprobante" invisible="1" readonly="1"/>
+                          <field name="xml_comprobante" filename="fname_xml_comprobante" readonly="1" style="color:#0f4d9b"/>
+                          <field name="fname_xml_respuesta_tributacion" invisible="1" placeholder="No hay XML"/>
+                          <field name="xml_respuesta_tributacion" filename="fname_xml_respuesta_tributacion"  style="color:#0f4d9b"/>
+
+                      </group>
+                  </group>
+              </page>
+            </xpath>
+
+
+<!--            <field name="name" position="after">-->
+<!--                <field name="number_electronic" readonly="1"/>-->
+<!--            </field>-->
+<!--            <field name="date_order" position="after">-->
+<!--                <field name="date_issuance" readonly="1"/>-->
+<!--            </field>-->
+<!--            <field name="session_move_id" position="after">-->
+<!--                <field name="reference_code_id" attrs="{'required':[('pos_order_id','!=',False)]}"/>-->
+<!--                <field name="pos_order_id"/>-->
+<!--                <field name="state_tributacion" readonly="1"/>-->
+<!--                <field name="fname_xml_respuesta_tributacion" invisible="1" readonly="1"/>-->
+<!--                <field name="xml_respuesta_tributacion" filename="fname_xml_respuesta_tributacion" readonly="1"/>-->
+<!--                <field name="fname_xml_comprobante" invisible="1" readonly="1"/>-->
+<!--                <field name="xml_comprobante" filename="fname_xml_comprobante" readonly="1"/>-->
+<!--            </field>-->
+            <xpath expr="//sheet[1]" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+      <record id="view_pos_order_electronic_invoice_tree" model="ir.ui.view">
+        <field name="name">pos.order.electronic.invoice.tree</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="state_tributacion"/>
+                <field name="state_email"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

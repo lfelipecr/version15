@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_electronic_invoice_form" model="ir.ui.view">
+        <field name="name">pos.config.electronic.invoice.form</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="inside">
+                <h2>Facturación Electrónica</h2>
+                <div class="row mt16 o_settings_container" id="electronic_invoice">
+                    <div class="col-12 col-lg-4 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <div class="content-group mt16">
+                                <div>
+                                    <label string="Sucursal" for="sucursal" class="col-lg-3 o_light_label"/>
+                                    <field name="sucursal" placeholder="Ejemplo: 1" style="text-align:center"/>
+                                </div>
+                                <div>
+                                    <label string="Terminal" for="terminal" class="col-lg-3 o_light_label"/>
+                                    <field name="terminal" placeholder="Ejemplo: 1" style="text-align:center"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-8 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                                     attrs="{'invisible': ['&amp;','&amp;',
+                                                        ('sequence_fe_id','!=',False),
+                                                        ('sequence_nc_id','!=',False),
+                                                        ('sequence_te_id','!=',False),
+                                                        ]}">
+                                     <span class="fa fa-info-circle"/> NOTA:Las secuencias se generarán acorde a la sucursal.
+                            </div>
+                            <header>
+                                <button name="create_sequences"  string="Generar secuencias" class="btn btn-sm btn-primary text-white"
+                                        icon="fa-list-ol"
+                                        type="object" attrs="{'invisible': ['&amp;','&amp;',
+                                                        ('sequence_fe_id','!=',False),
+                                                        ('sequence_nc_id','!=',False),
+                                                        ('sequence_te_id','!=',False),
+                                                        ]}"
+                                        help="Generará secuencias automáticas"/>
+                            </header>
+                            <div class="content-group mt16">
+                                <div>Secuencia de Facturas Electrónicas</div>
+                                <div>
+                                    <field name="sequence_fe_id"/>
+                                </div>
+                                <div>Secuencia de Notas de Crédito Electrónicas</div>
+                                <div>
+                                    <field name="sequence_nc_id"/>
+                                </div>
+                                <div>Secuencia de Tiquetes Electrónicos</div>
+                                <div>
+                                    <field name="sequence_te_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

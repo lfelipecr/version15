@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fetchmail_server_limit" model="ir.ui.view">
+        <field name="model">fetchmail.server</field>
+        <field name="inherit_id" ref="fetchmail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="date_get"/>
+                </xpath>
+                <xpath expr="//page[@name='advanced_options']" position="inside">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>Logs</h3>
+                        </div>
+
+                    </div>
+                   <div class="row">
+                       <div class="col-12">
+                           <field name="logs" />
+                       </div>
+                   </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resolution_form_view" model="ir.ui.view">
+        <field name="name">resolution.form.view</field>
+        <field name="model">resolution</field>
+        <field name="arch" type="xml">
+            <form string="Documentos de referencia">
+                <sheet string="Documentos de referencia">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="date_resolution"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="resolution_tree_view" model="ir.ui.view">
+        <field name="name">resolution.tree.view</field>
+        <field name="model">resolution</field>
+        <field name="arch" type="xml">
+            <tree string="Documentos de referencia">
+                <field name="name"/>
+                <field name="date_resolution"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_resolution" model="ir.actions.act_window">
+        <field name="name">Resoluciones</field>
+        <field name="res_model">resolution</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_resolution" name="Resoluciones" parent="l10n_cr_accounting.menu_electronic_invoice" sequence="5" action="action_resolution"/>
+</odoo>

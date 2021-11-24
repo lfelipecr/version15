@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="identification_type_form_view" model="ir.ui.view">
+        <field name="name">identification.type.form.view</field>
+        <field name="model">identification.type</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de identificación">
+                <sheet string="Tipo de identificación">
+                    <group col="4">
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="identification_type_tree_view" model="ir.ui.view">
+        <field name="name">identification.type.tree.view</field>
+        <field name="model">identification.type</field>
+        <field name="arch" type="xml">
+            <tree string="Tipo de identificación">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="notes"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_identification_type" model="ir.actions.act_window">
+        <field name="name">Tipo de identificación</field>
+        <field name="res_model">identification.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_identification_type" name="Tipo de identificación" parent="l10n_cr_accounting.menu_electronic_invoice" sequence="7" action="action_identification_type"/>
+</odoo>

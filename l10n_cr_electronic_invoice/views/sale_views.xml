@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_exoneration_form" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='payment_action_capture']" position="after">
+                <field name="is_expired" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d'][2]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|','|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale'),('is_expired','=',
+                    True)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-success text-center o_form_header"
+                     attrs="{'invisible': [('is_expired', '!=', True)]}" role="status">
+                    <a class="close" data-dismiss="alert" href="#" aria-label="Close">x</a>
+                    <div attrs="{'invisible': [('is_expired', '!=', True)]}">
+                        <strong>El cliente perteneciente a este documento está afecto a exoneración, sin embargo la
+                            expiración de la misma,
+                            no permite generar la factura correspondiente.
+                        </strong>
+                    </div>
+                </div>
+            </xpath>
+
+
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="has_exoneration" invisible="1"/>
+                <field name="due_exoneration" invisible="1"/>
+                <field name="partner_tax_id" invisible="1"/>
+                <field name="apply_discount_global" string="Aplicar descuento" style="color: #9b00b3" groups="product.group_discount_per_so_line"/>
+                <label for="percentage_discount_global" string="Descuento general"
+                       attrs="{'invisible': [('apply_discount_global', '=',False)]}"/>
+                <div attrs="{'invisible': [('apply_discount_global', '=',False)]}">
+                    <field name="percentage_discount_global" class="mb-0 oe_inline text-center"
+                           placeholder="*Ingrese descuento."/>
+                    <span>%</span>
+                    <button name="calc_discount" type="object" string="Calcular" class="btn btn-link text-primary"
+                            icon="fa-caret-right"/>
+                </div>
+                <field name="amount_discount" string="Total descontado" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='invoice_status']" position="before">
+                <field name="change_color" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="before">
+                <div>
+                    <field name="re_calcule" invisible="1"/>
+                    <div class="alert alert-info text-center" attrs="{'invisible': [('re_calcule', '=', False)]}"
+                         role="alert">
+                        <strong>Asegúrese de calcular el descuento total nuevamente, puesto que hemos econtrado
+                            inconfruencias entre el total
+                            de porcentaje a descontar y la suma de las lineas de descuento.
+                        </strong>
+                    </div>
+                </div>
+
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="decoration-danger">change_color == True</attribute>
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_form_view_two_inherit" model="ir.ui.view">
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="l10n_cr_accounting.account_tax_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='has_exoneration']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_tax_form_view_classification_inherit" model="ir.ui.view">
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//group/group[2]" position="inside">
+                <field name="classification_type"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_tax_tree_classification_inherit" model="ir.ui.view">
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_tree"/>
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='active']" position="before">
+                <field name="classification_type"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

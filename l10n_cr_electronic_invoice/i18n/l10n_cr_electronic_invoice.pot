@@ -1,0 +1,8 @@
+# Translation of Odoo Server.
+
+#. module: l10n_cr_electronic_invoice
+#: model_terms:ir.ui.view,arch_db:l10n_cr_electronic_invoice.view_company_form_vat
+#: model_terms:ir.ui.view,arch_db:l10n_cr_electronic_invoice.view_partner_vat_form
+msgid "VAT"
+msgstr ""
+

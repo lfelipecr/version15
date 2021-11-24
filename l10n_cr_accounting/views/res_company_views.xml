@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="company_form_view_inherit" model="ir.ui.view">
+        <field name="name">res.company.form.view.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="website" position="before">
+                <field name="activity_ids" widget="many2many_tags"/>
+                <field name="def_activity_id" domain="[('id', 'in', activity_ids)]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

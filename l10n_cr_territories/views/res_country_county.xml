@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_country_county_form_view" model="ir.ui.view">
+        <field name="name">res.country.county.form.view</field>
+        <field name="model">res.country.county</field>
+        <field name="arch" type="xml">
+            <form string="Cantón">
+                <sheet string="Cantón">
+                    <group col="4">
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="state_id" options="{'no_open': True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_country_county_tree_view" model="ir.ui.view">
+        <field name="name">res.country.county.tree.view</field>
+        <field name="model">res.country.county</field>
+        <field name="arch" type="xml">
+            <tree string="Cantones">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="state_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_res_country_county" model="ir.actions.act_window">
+        <field name="name">Cantones</field>
+        <field name="res_model">res.country.county</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_res_country_county" name="Cantones" parent="account.account_management_menu" sequence="2" action="action_res_country_county"/>
+</odoo>

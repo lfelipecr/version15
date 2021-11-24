@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.territories</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="state_id" position="after">
+                <field name="county_id" class="o_address_state" placeholder="Canton"
+                    options="{'no_open': True}"
+                    attrs="{
+                        'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)],
+                        'invisible': [('country_id', '!=', %(base.cr)d),
+                    ]}"
+                    domain="[('state_id', '=', state_id)]"
+                    context="{'country_id': country_id}"/>
+                <field name="district_id" class="o_address_state" placeholder="District"
+                    options="{'no_open': True}"
+                    attrs="{
+                        'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)],
+                        'invisible': [('country_id', '!=', %(base.cr)d),
+                    ]}"
+                    domain="[('county_id', '=', county_id)]"
+                    context="{'country_id': country_id, 'state_id': state_id}"/>
+                <field name="neighborhood_id" class="o_address_state" placeholder="Neighborhood"
+                    options="{'no_open': True}"
+                    attrs="{
+                        'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)],
+                        'invisible': [('country_id', '!=', %(base.cr)d),
+                    ]}"
+                    domain="[('district_id', '=', district_id)]"
+                    context="{'country_id': country_id, 'state_id': state_id, 'county_id': county_id}"/>
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="attrs">{'invisible': [('country_id','=',%(base.cr)d)]}</attribute>
+            </field>
+            <field name="zip" position="attributes">
+                <attribute name="attrs">{'invisible': [('country_id','=',%(base.cr)d)]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

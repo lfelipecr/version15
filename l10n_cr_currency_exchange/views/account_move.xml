@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_view_form" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.currency_rate_usd_crc</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='journal_div']" position="after">
+                 <field name="currency_rate_usd_crc" groups="base.group_multi_currency" string="Tipo de cambio"
+                  attrs="{'invisible': [('invoice_date', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_uom_categ_area" model="uom.category">
+        <field name="name">Area</field>
+    </record>
+
+    <record id="product_uom_categ_service" model="uom.category">
+        <field name="name">Services</field>
+    </record>
+
+    <record id="product_uom_categ_rent" model="uom.category">
+        <field name="name">Rent</field>
+    </record>
+
+    <record id="uom.product_uom_categ_unit" model="uom.category">
+        <field name="name">Unidad</field>
+    </record>
+
+    <record id="uom.product_uom_categ_kgm" model="uom.category">
+        <field name="name">Peso</field>
+    </record>
+
+    <record id="uom_categ_wtime" model="uom.category">
+        <field name="name">Horario de trabajo</field>
+    </record>
+
+    <record id="uom_categ_length" model="uom.category">
+        <field name="name">Longitud Distancia</field>
+    </record>
+
+    <record id="uom.product_uom_categ_vol" model="uom.category">
+        <field name="name">Volumen</field>
+    </record>
+</odoo>

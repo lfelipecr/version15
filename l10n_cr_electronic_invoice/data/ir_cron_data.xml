@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_consultahacienda" model="ir.cron">
+        <field name="name">Consulta Hacienda FE Clientes</field>
+        <field eval="True" name="active"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model.query_all_documents_needed()</field>
+    </record>
+
+    <record id="ir_cron_confirmahacienda" model="ir.cron">
+        <field name="name">Consulta Hacienda FE Proveedores</field>
+        <field eval="True" name="active"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._check_hacienda_for_mrs()</field>
+    </record>
+
+    <record id="ir_cron_valida_hacienda_invoice" model="ir.cron">
+        <field name="name">Valida Facturas Hacienda</field>
+        <field eval="True" name="active"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._send_invoices_to_hacienda()</field>
+    </record>
+
+    <record id="ir_cron_mr_hacienda_invoice" model="ir.cron">
+        <field name="name">Envio Mensaje Receptor</field>
+        <field name="active" eval="False"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model.send_mrs_to_hacienda()</field>
+    </record>
+
+
+    <record id="ir_cron_update_product_service" model="ir.cron">
+        <field name="name">Actualizar servicio en productos</field>
+        <field name="active" eval="False"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">12</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">
+productos = env['product.template'].search([('type','=','service'),('code','=','Os')])
+services_uom = env['uom.uom'].search([('category_id.name','=','Services')])
+for p in productos:
+    p.sudo().update({'uom_id': services_uom.id, 'uom_po_id': services_uom.id})
+        </field>
+    </record>
+
+</odoo>

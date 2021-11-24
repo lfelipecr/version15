@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="account.report_invoice_document">
+        <t t-call="web.basic_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <t t-set="address">
+                <address t-field="o.partner_id" t-options="{'widget': 'contact', 'fields': ['address', 'name'], 'no_marker': True}"/>
+            </t>
+            <style>div { font-size: 90%; } .blank_row { height: 10px !important; } .field_label { font-weight: bold; text-align: right; padding-right: 5px; } table { border-spacing: 3px; } table th { text-transform: uppercase; background-color: #C0C0C0; } .column_float { text-align: right; padding-right: 5px; }</style>
+            <div class="header" style="width: 100%;">
+                <div style="float: left; width: 33.33%;">
+                    <img src="/web/binary/company_logo" style="max-height: 65px; margin-top:5px;" alt="Logo"/>
+                </div>
+                <div style="float: left; width: 33.33%; text-align: center;">
+                    <h3>
+                        <span t-field="o.tipo_documento"/>
+                    </h3>
+                    <span t-field="o.electronic_sequence"/>
+                </div>
+            </div>
+            <div class="page">
+                 <h2 style="display:none">
+                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Factura</span>
+                    <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Factura borrador</span>
+                    <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">Factura cancelada</span>
+                    <span t-if="o.move_type == 'out_refund'">Nota de crédito</span>
+                    <span t-if="o.move_type == 'in_refund'">Nota de crédito proveedor</span>
+                    <span t-if="o.move_type == 'in_invoice'">Factura de proveedor</span>
+                    <span t-if="o.name != '/'" t-field="o.name"/>
+                </h2>
+                <table style="width: 100%;">
+                    <h2 t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</h2>
+
+                    <div t-if="o.move_type == 'out_invoice' and o.state in ('posted')">
+                        <tr>
+                            <th colspan="6">Datos del documento</th>
+                        </tr>
+                        <tr>
+                            <td class="field_label">Clave:</td>
+                            <td colspan="3">
+                                <span t-field="o.number_electronic"/>
+                            </td>
+                            <td class="field_label">Condición Venta:</td>
+                            <td>
+                                <span t-field="o.invoice_payment_term_id"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="field_label">Referencia:</td>
+                            <td>
+                                <!-- Used in inheritance -->
+                                <div name="reference"/>
+                                <strong>
+                                    <span t-field="o.electronic_sequence"/>
+                                </strong>
+                            </td>
+                            <td/>
+                            <td/>
+                            <td class="field_label">Plazo de Crédito:</td>
+                            <td>
+                                <span t-field="o.invoice_payment_term_id.line_ids[0].days"/>
+                                <!-- TODO multiple-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="field_label">Fecha:</td>
+                            <td>
+                                <span t-field="o.date_issuance"/>
+                            </td>
+                            <td/>
+                            <td/>
+                            <td class="field_label">Medio de Pago:</td>
+                            <td>
+                                <span t-field="o.payment_method_id"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"/>
+                            <td class="field_label">Moneda:</td>
+                            <td>
+                                <span t-field="o.currency_id"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"/>
+                            <td class="field_label">Tipo de Cambio:</td>
+                            <td>
+                                <span t-esc="o.usd_rate" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                            </td>
+                        </tr>
+                    </div>
+                    <tr class="blank_row">
+                        <td colspan="6"/>
+                    </tr>
+                    <tr>
+                        <th colspan="6">Datos del emisor</th>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Nombre:</td>
+                        <td>
+                            <span t-field="o.company_id.name"/>
+                        </td>
+                        <td/>
+                        <td/>
+                        <td class="field_label">Cédula:</td>
+                        <td>
+                            <span t-field="o.company_id.vat"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Empresa:</td>
+                        <td>
+                            <span t-field="o.company_id.commercial_name"/>
+                        </td>
+                        <td/>
+                        <td/>
+                        <td/>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td class="field_label">E-Mail:</td>
+                        <td>
+                            <span t-field="o.company_id.email"/>
+                        </td>
+                        <td class="field_label">Telefono:</td>
+                        <td>
+                            <span t-field="o.company_id.phone"/>
+                        </td>
+                        <td/>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Provincia:</td>
+                        <td>
+                            <span t-field="o.company_id.state_id"/>
+                        </td>
+                        <td class="field_label">Cantón:</td>
+                        <td>
+                            <span t-field="o.company_id.county_id"/>
+                        </td>
+                        <td class="field_label">Distrito:</td>
+                        <td>
+                            <span t-field="o.company_id.district_id"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Barrio:</td>
+                        <td>
+                            <span t-field="o.company_id.neighborhood_id"/>
+                        </td>
+                        <td class="field_label">Otras Señas:</td>
+                        <td>
+                            <span t-field="o.company_id.street"/>
+                        </td>
+                        <td colspan="2"/>
+                    </tr>
+                    <tr class="blank_row">
+                        <td colspan="6"/>
+                    </tr>
+                    <tr>
+                        <th colspan="6">Datos del receptor</th>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Nombre:</td>
+                        <td>
+                            <span t-field="o.partner_id.name"/>
+                        </td>
+                        <td/>
+                        <td/>
+                        <td class="field_label">Cédula:</td>
+                        <td>
+                            <span t-field="o.partner_id.vat"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Empresa:</td>
+                        <td>
+                            <span t-field="o.partner_id.commercial_name"/>
+                        </td>
+                        <td/>
+                        <td/>
+                        <td/>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td class="field_label">E-Mail:</td>
+                        <td>
+                            <span t-field="o.partner_id.email"/>
+                        </td>
+                        <td class="field_label">Telefono:</td>
+                        <td>
+                            <span t-field="o.partner_id.phone"/>
+                        </td>
+                        <td/>
+                        <td/>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Provincia:</td>
+                        <td>
+                            <span t-field="o.partner_id.state_id"/>
+                        </td>
+                        <td class="field_label">Cantón:</td>
+                        <td>
+                            <span t-field="o.partner_id.county_id"/>
+                        </td>
+                        <td class="field_label">Distrito:</td>
+                        <td>
+                            <span t-field="o.partner_id.district_id"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Barrio:</td>
+                        <td>
+                            <span t-field="o.partner_id.neighborhood_id"/>
+                        </td>
+                        <td class="field_label">Otras Señas:</td>
+                        <td>
+                            <span t-field="o.partner_id.street"/>
+                        </td>
+                        <td colspan="2"/>
+                    </tr>
+                    <tr class="blank_row">
+                        <td colspan="6"/>
+                    </tr>
+                </table>
+                <table style="width: 100%;">
+                    <tr>
+                        <th>Lin.</th>
+                        <th>Código</th>
+                        <th>Detalle</th>
+                        <th class="column_float">Cant.</th>
+                        <th>Unidad</th>
+                        <th class="column_float">Precio</th>
+                        <th class="column_float">Monto</th>
+                        <th class="column_float">%</th>
+                        <th class="column_float">Descuento</th>
+                        <th class="column_float">SubTotal</th>
+                    </tr>
+                    <t t-set="line_number" t-value="0"/>
+                    <t t-foreach="o.invoice_line_ids" t-as="line">
+                        <t t-set="line_number" t-value="line_number + 1"/>
+                        <tr>
+                            <td>
+                                <t t-esc="line_number"/>
+                            </td>
+                            <td>
+                                <span t-field="line.product_id.default_code"/>
+                            </td>
+                            <td>
+                                <span t-field="line.name"/>
+                            </td>
+                            <td class="column_float">
+                                <span t-field="line.quantity"/>
+                            </td>
+                            <td>
+                                <span t-field="line.product_uom_id"/>
+                            </td>
+                            <td class="column_float">
+                                <span t-field="line.price_unit"/>
+                            </td>
+                            <td class="column_float">
+                                <span t-field="line.no_discount_amount"/>
+                            </td>
+                            <td class="column_float">
+                                <span t-field="line.discount"/>
+                            </td>
+                            <td class="column_float">
+                                <span t-field="line.discount_amount"/>
+                            </td>
+                            <td class="column_float">
+                                <span t-field="line.price_subtotal"/>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+                <br/>
+                <table style="width: 100%;">
+                    <tr>
+                        <th colspan="3" style="width: 50%;">Otros</th>
+                        <th colspan="3" style="width: 50%;">Resumen del documento</th>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Otros Cargos:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span>0.00</span>
+                        </td>
+                        <td class="field_label">Total servicios gravados:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_services_taxed" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" rowspan="2"/>
+                        <td class="field_label">Total servicios exentos:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_services_exempt" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total mercancias gravadas:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_products_taxed" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tg-0pky" colspan="3" rowspan="6"><span t-field="o.narration"/></td>
+                        <td class="field_label">Total mercancias exentas:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_products_exempt" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total gravado:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_taxed" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total exento:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_exempt" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total venta:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_sale" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total descuento:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_discount" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total venta neta:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.amount_untaxed" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tg-0pky" colspan="3" rowspan="3" style="text-align: center;">"Autorizada mediante resolución N° DGT-R-033-2019 del 20/06/2019"</td>
+                        <td class="field_label">Total impuestos:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.amount_tax" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total otros cargos:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.total_others" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field_label">Total comprobante:</td>
+                        <td>
+                            <span t-field="o.currency_id"/>
+                        </td>
+                        <td class="column_float">
+                            <span t-field="o.amount_total" t-options="{'widget': 'float', 'precision': 2}"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Used in inheritance -->
+                <div id="total">
+                    <div>
+                        <table/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

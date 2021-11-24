@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fecr_amount_precision" model="decimal.precision">
+        <field name="name">Facturación electrónica >> Precisión decimal</field>
+        <field name="digits">5</field>
+    </record>
+</odoo>

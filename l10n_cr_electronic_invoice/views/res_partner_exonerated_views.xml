@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_tax_form_view" model="ir.ui.view">
+        <field name="name">res.partner.tax.form.view</field>
+        <field name="model">res.partner.tax</field>
+        <field name="arch" type="xml">
+            <form string="Cliente Exonerado">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="numero_documento" placeholder="Ingrese número de autorización a buscar"/>
+                            <field name="partner_id"/>
+                            <field name="vat"/>
+                            <field name="tax_id"/>
+                            <field name="porcentaje_exoneracion"/>
+                        </group>
+                        <group>
+                            <field name="cabys_ids" widget="many2many_tags"/>
+                            <field name="tipo_documento"/>
+                            <field name="fecha_emision"/>
+                            <field name="fecha_vencimiento"/>
+                            <field name="institucion"/>
+                            <field name="date_issue" invisible="1"/>
+                            <field name="date_expiration" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_partner_tax_tree_view" model="ir.ui.view">
+        <field name="name">res.partner.tax.tree.view</field>
+        <field name="model">res.partner.tax</field>
+        <field name="arch" type="xml">
+            <tree string="Cliente Exonerado">
+                <field name="numero_documento"/>
+                <field name="partner_id"/>
+                <field name="vat"/>
+                <field name="tax_id"/>
+                <field name="porcentaje_exoneracion"/>
+                <field name="cabys_ids" widget="many2many_tags"/>
+                <field name="tipo_documento"/>
+                <field name="fecha_emision"/>
+                <field name="fecha_vencimiento"/>
+                <field name="institucion"/>
+                <field name="date_issue" invisible="1"/>
+                <field name="date_expiration" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_res_partner_tax" model="ir.actions.act_window">
+        <field name="name">Clientes Exonerados</field>
+        <field name="res_model">res.partner.tax</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_res_partner_tax" name="Cliente Exonerados" parent="l10n_cr_accounting.menu_electronic_invoice"
+              sequence="200"
+              action="action_res_partner_tax"/>
+
+
+</odoo>

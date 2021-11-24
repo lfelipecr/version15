@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <function model="res.company" name="try_create_confirmation_sequeces">
+        <value model="res.company" search="[]"/>
+    </function>
+    <record id="seq_electronic_invoice" model="ir.sequence">
+        <field name="name">Secuencia de Factura Electrónica</field>
+        <field name="code">sequece.FE</field>
+        <field name="prefix"/>
+        <field name="implementation">no_gap</field>
+        <field name="padding">10</field>
+    </record>
+    <record id="seq_electronic_debit_note" model="ir.sequence">
+        <field name="name">Secuencia de Nota Débito Electrónica</field>
+        <field name="code">sequece.ND</field>
+        <field name="prefix"/>
+        <field name="implementation">no_gap</field>
+        <field name="padding">10</field>
+    </record>
+    <record id="seq_electronic_credit_note" model="ir.sequence">
+        <field name="name">Secuencia de Nota Crédito Electrónica</field>
+        <field name="code">sequece.NC</field>
+        <field name="prefix"/>
+        <field name="implementation">no_gap</field>
+        <field name="padding">10</field>
+    </record>
+    <record id="seq_electronic_ticket" model="ir.sequence">
+        <field name="name">Secuencia de Tiquete Electrónico</field>
+        <field name="code">sequece.TE</field>
+        <field name="prefix"/>
+        <field name="implementation">no_gap</field>
+        <field name="padding">10</field>
+    </record>
+    <record id="seq_electronic_exportation_invoice" model="ir.sequence">
+        <field name="name">Secuencia de Factura Electrónica de Exportación</field>
+        <field name="code">sequece.FEE</field>
+        <field name="prefix"/>
+        <field name="implementation">no_gap</field>
+        <field name="padding">10</field>
+    </record>
+
+
+
+    <!--Nuevo 2021-10-21-->
+    <record id="journal_sequence_normal_invoice" model="ir.sequence">
+        <field name="name">Secuencia factura de clientes</field>
+        <field name="code">sequence.normal.journal.FACT</field>
+        <field name="prefix"/>
+        <field name="implementation">no_gap</field>
+        <field name="padding">6</field>
+    </record>
+    <record id="journal_sequence_normal_r_invoice" model="ir.sequence">
+        <field name="name">Secuencia rectificativa factura de clientes</field>
+        <field name="code">sequence.normal.journal.RFACT</field>
+        <field name="prefix"/>
+        <field name="implementation">no_gap</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

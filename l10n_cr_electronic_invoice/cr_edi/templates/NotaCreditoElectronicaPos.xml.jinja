@@ -1,0 +1,135 @@
+<NotaCreditoElectronica
+    xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/notaCreditoElectronica"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://www.hacienda.go.cr/ATV/ComprobanteElectronico/docs/esquemas/2016/v4.3/NotaCreditoElectronica_V4.3.xsd">
+    <Clave>{{document.number_electronic}}</Clave>
+    <CodigoActividad>{{activity_code}}</CodigoActividad>
+    <NumeroConsecutivo>{{document.number_electronic[21:41]}}</NumeroConsecutivo>
+    <FechaEmision>{{document.date_issuance}}</FechaEmision>
+    <Emisor>
+        <Nombre>{{issuer.name}}</Nombre>
+        <Identificacion>
+            <Tipo>{{issuer.identification_id.code}}</Tipo>
+            <Numero>{{issuer.vat}}</Numero>
+        </Identificacion>
+        <NombreComercial>{{issuer.commercial_name or "NA"}}</NombreComercial>
+        <Ubicacion>
+            <Provincia>{{issuer.state_id.code}}</Provincia>
+            <Canton>{{issuer.county_id.code}}</Canton>
+            <Distrito>{{issuer.district_id.code}}</Distrito>
+            <Barrio>{{issuer.neighborhood_id.code}}</Barrio>
+            <OtrasSenas>{{issuer.street or "NA"}}</OtrasSenas>
+        </Ubicacion>
+        <Telefono>
+            <CodigoPais>{{phone_obj_issuer.country_code}}</CodigoPais>
+            <NumTelefono>{{phone_obj_issuer.national_number}}</NumTelefono>
+        </Telefono>
+        <CorreoElectronico>{{issuer.email}}</CorreoElectronico>
+    </Emisor>
+    <Receptor>
+        <Nombre>{{receiver.name[:99]}}</Nombre>
+        <Identificacion>
+            <Tipo>{{receiver.identification_id.code}}</Tipo>
+            <Numero>{{receiver.vat}}</Numero>
+        </Identificacion>
+        {% if receiver.state_id and receiver.county_id and receiver.district_id and receiver.neighborhood_id %}
+        <Ubicacion>
+            <Provincia>{{receiver.state_id.code or ""}}</Provincia>
+            <Canton>{{receiver.county_id.code or ""}}</Canton>
+            <Distrito>{{receiver.district_id.code or ""}}</Distrito>
+            <Barrio>{{receiver.neighborhood_id.code or "00"}}</Barrio>
+            <OtrasSenas>{{receiver.street or "NA"}}</OtrasSenas>
+        </Ubicacion>
+        {% endif %}
+        <Telefono>
+            <CodigoPais>{{phone_obj_receiver.country_code}}</CodigoPais>
+            <NumTelefono>{{phone_obj_receiver.national_number}}</NumTelefono>
+        </Telefono>
+        <CorreoElectronico>{{receiver.email}}</CorreoElectronico>
+    </Receptor>
+    <CondicionVenta>{{document.payment_ids.payment_method_id.account_payment_term_id.sale_conditions_id.sequence}}</CondicionVenta>
+    <PlazoCredito>{{document.payment_ids.payment_method_id.account_payment_term_id.line_ids[0].days}}</PlazoCredito>
+    <MedioPago>{{document.payment_ids.payment_method_id.payment_method_id.sequence}}</MedioPago>
+    <DetalleServicio>
+        {% set count = namespace(value=0) %} {% for line in lines %}
+        <LineaDetalle>
+            {% set count.value = count.value + 1 %}
+            <NumeroLinea>{{ count.value }}</NumeroLinea>
+            <Codigo>{{line.product_id.cabys_id.code}}</Codigo>
+            <Cantidad>{{line.qty}}</Cantidad>
+            <UnidadMedida>{{line.product_id.uom_id.code}}</UnidadMedida>
+            <Detalle>{{line.name[:200]}}</Detalle>
+            <PrecioUnitario>{{line.price_unit}}</PrecioUnitario>
+            <MontoTotal>{{(line.price_unit * line.qty)|round(5)}}</MontoTotal>
+            <Descuento>
+                <MontoDescuento>{{((line.price_unit * line.qty) * (line.discount/100))|round(5)}}</MontoDescuento>
+                <NaturalezaDescuento>{{"Descuento Comercial"}}</NaturalezaDescuento>
+            </Descuento>
+            <SubTotal>{{(line.price_subtotal)|round(5)}}</SubTotal>
+            {% for tax in line.tax_ids_after_fiscal_position %}
+            <Impuesto>
+                <Codigo>{{tax.tax_code}}</Codigo>
+                <CodigoTarifa>{{tax.iva_tax_code}}</CodigoTarifa>
+                <Tarifa>{{tax.amount}}</Tarifa>
+                <Monto>{{(line.price_subtotal * (tax.amount / 100))|round(5)}}</Monto>
+                {# <Exoneracion>
+                    <TipoDocumento>{{receiver.type_exoneration.code}}</TipoDocumento>
+                    <NumeroDocumento>{{receiver.exoneration_number}}</NumeroDocumento>
+                    <NombreInstitucion>{{receiver.institution_name}}</NombreInstitucion>
+                    <FechaEmision>{{receiver.date_issue}}</FechaEmision>
+                    <PorcentajeExoneracion>{{tax. exoneracion]["porcentajeCompra"]}}</PorcentajeExoneracion>
+                    <MontoExoneracion>{{tax. exoneracion]["montoImpuesto"]}}</MontoExoneracion>
+                </Exoneracion> #}
+            </Impuesto>
+            {% endfor %}
+             <ImpuestoNeto>{{(line.price_subtotal_incl - line.price_subtotal)|round(5)}}</ImpuestoNeto>
+            <MontoTotalLinea>{{(line.price_subtotal_incl)|round(5)}}</MontoTotalLinea>
+        </LineaDetalle>
+        {% endfor %}
+    </DetalleServicio>
+    {# <OtrosCargos>
+        {% for other_charge in lines.other_charges %}
+        <TipoDocumento>{{otrosCargos[otro_cargo]["TipoDocumento"]}}</TipoDocumento>
+        <NumeroIdentidadTercero>{{otrosCargos[otro_cargo]["NumeroIdentidadTercero"]}}</NumeroIdentidadTercero>
+        <NombreTercero>{{otrosCargos[otro_cargo]["NombreTercero"]}}</NombreTercero>
+        <Detalle>{{otrosCargos[otro_cargo]["Detalle"]}}</Detalle>
+        <Porcentaje>{{otrosCargos[otro_cargo]["Porcentaje"]}}</Porcentaje>
+        <MontoCargo>{{otrosCargos[otro_cargo]["MontoCargo"]}}</MontoCargo>
+        {% endfor %}
+    </OtrosCargos> #}
+    <ResumenFactura>
+        <CodigoTipoMoneda>
+            <CodigoMoneda>{{document.currency_id.name}}</CodigoMoneda>
+            <TipoCambio>{{(currency_rate)|round(5)}}</TipoCambio>
+        </CodigoTipoMoneda>
+        <TotalServGravados>{{(amounts["service_taxed"])|round(5)}}</TotalServGravados>
+        <TotalServExentos>{{(amounts["service_no_taxed"])|round(5)}}</TotalServExentos>
+        <TotalServExonerado>{{(amounts["service_exempt"])|round(5)}}</TotalServExonerado>
+        <TotalMercanciasGravadas>{{(amounts["product_taxed"])|round(5)}}</TotalMercanciasGravadas>
+        <TotalMercanciasExentas>{{(amounts["product_no_taxed"])|round(5)}}</TotalMercanciasExentas>
+        <TotalMercExonerada>{{(amounts["product_exempt"])|round(5)}}</TotalMercExonerada>
+        <TotalGravado>{{(amounts["service_taxed"] + amounts["product_taxed"])|round(5)}}</TotalGravado>
+        <TotalExento>{{(amounts["service_no_taxed"] + amounts["product_no_taxed"])|round(5)}}</TotalExento>
+        <TotalExonerado>{{(amounts["service_exempt"] + amounts["product_exempt"])|round(5)}}</TotalExonerado>
+        <TotalVenta>{{(amounts["service_taxed"] + amounts["service_no_taxed"] + amounts["service_exempt"] + amounts["product_taxed"] + amounts["product_no_taxed"] + amounts["product_exempt"])|round(5)}}</TotalVenta>
+        <TotalDescuentos>{{(amounts["discount"])|round(5)}}</TotalDescuentos>
+        <TotalVentaNeta>{{(document.amount_total-document.amount_tax)|round(5)}}</TotalVentaNeta>
+        <TotalImpuesto>{{(document.amount_tax)|round(5)}}</TotalImpuesto>
+        <TotalOtrosCargos>{{(amounts["other_charges"])|round(5)}}</TotalOtrosCargos>
+        <TotalComprobante>{{(document.amount_total)|round(5)}}</TotalComprobante>
+    </ResumenFactura>
+    <InformacionReferencia>
+        <TipoDoc>{{reference.number_electronic[29:31]}}</TipoDoc>
+        <Numero>{{reference.number_electronic}}</Numero>
+        <FechaEmision>{{reference.date_order}}</FechaEmision>
+        <Codigo>99</Codigo>
+        <Razon>Otros</Razon>
+        {#
+        <Codigo>{{reference_code.code}}</Codigo>
+        <Razon>{{reference_code.name}}</Razon>
+        #}
+    </InformacionReferencia>
+    <Otros>
+        <OtroTexto>{{notes}}</OtroTexto>
+    </Otros>
+</NotaCreditoElectronica>

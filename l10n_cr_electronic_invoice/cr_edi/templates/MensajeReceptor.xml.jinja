@@ -1,0 +1,27 @@
+<MensajeReceptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/mensajeReceptor"
+    xsi:schemaLocation="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/mensajeReceptor https://www.hacienda.go.cr/ATV/ComprobanteElectronico/docs/esquemas/2016/v4.3/MensajeReceptor_V4.3.xsd">
+    <Clave>{{electronic_number}}</Clave>
+    <NumeroCedulaEmisor>{{issuer_vat}}</NumeroCedulaEmisor>
+    <FechaEmisionDoc>{{emition_date}}</FechaEmisionDoc>
+    <Mensaje>{{message_type}}</Mensaje>
+    {% if message %}
+    <DetalleMensaje>{{message}}</DetalleMensaje>
+    {% endif %}
+    {% if amount_tax %}
+    <MontoTotalImpuesto>{{amount_tax}}</MontoTotalImpuesto>
+    {% endif %}
+    {% if activity_code %}
+    <CodigoActividad>{{activity_code}}</CodigoActividad>
+    {% endif %}
+    <CondicionImpuesto>{{tax_status}}</CondicionImpuesto>
+    {% if amount_tax_to_be_credited %}
+    <MontoTotalImpuestoAcreditar>{{amount_tax_to_be_credited}}</MontoTotalImpuestoAcreditar>
+    {% endif %}
+    {% if amount_total_expense %}
+    <MontoTotalDeGastoAplicable>{{amount_total_expense}}</MontoTotalDeGastoAplicable>
+    {% endif %}
+    <TotalFactura>{{amount_total}}</TotalFactura>
+    <NumeroCedulaReceptor>{{receiver_vat}}</NumeroCedulaReceptor>
+    <NumeroConsecutivoReceptor>{{receiver_sequence}}</NumeroConsecutivoReceptor>
+</MensajeReceptor>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_form_view_inherit_fecr" model="ir.ui.view">
+        <field name="name">account.tax.form.view.inherit.fecr</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="tax_code"/>
+            </field>
+        </field>
+    </record>
+</odoo>

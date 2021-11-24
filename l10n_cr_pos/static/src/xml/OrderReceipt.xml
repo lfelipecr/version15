@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+
+        <xpath expr="//div[hasclass('cashier')]" position="after">
+            <t t-if="receipt.tipo_documento == 'TE' ">
+                <div><span>TIQUETE ELECTRÓNICO</span></div>
+
+            </t>
+            <t t-if="receipt.tipo_documento == 'FE' ">
+                <div><span>FACTURA ELECTRÓNICA</span></div>
+                <div style="text-align:left;font-size:12px">
+                    <span>Cliente: <t t-esc='receipt.client.name'/> </span>
+                </div>
+                <div style="text-align:left;font-size:12px">
+                    <span>
+                        <t t-if="receipt.client.identification_id">
+                            <t t-esc='receipt.client.identification_id[1]'/>
+                        </t>
+                        <t t-elif="receipt.client.p2p_document_type">
+                            <t t-esc='receipt.client.p2p_document_type[1]'/>
+                        </t>
+                        <t t-else="">
+                            Documento
+                        </t>
+                        :
+                        <t t-esc='receipt.client.vat'/> </span>
+                </div>
+                <div style="text-align:left;font-size:12px">
+                    <span>Email: <t t-esc='receipt.client.email'/> </span>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="before">
+             <div class="pos-receipt-contact">
+                 <div style="text-align:left;font-size:10px">
+                     <span>Consecutivo: </span>
+                     <t t-esc="receipt.secuencia "/>
+                 </div>
+                 <div style="text-align:left">
+                    <span style="font-size:10px">Clave: <t t-esc="receipt.numero_electronico "/></span>
+                 </div>
+             </div>
+        </xpath>
+        <!--        <xpath expr="//div[hasclass('orderlines')]" position="replace">-->
+        <!--            <div class="orderlines">-->
+        <!--                  <div>cantidad | Descripción | Precio | Subtotal </div>-->
+        <!--                  <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">-->
+        <!--                      <div>-->
+        <!--                          <span t-esc="line.product_name_wrapped[0]"></span>-->
+        <!--                          <span t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"></span>-->
+        <!--                          <span t-esc="env.pos.format_currency_no_symbol(line.price_display_one)"></span>-->
+        <!--                          <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" ></span>-->
+        <!--                      </div>-->
+        <!--                  </t>-->
+        <!--            </div>-->
+
+
+        <!--        </xpath>-->
+        <!--        <xpath expr="//div[hasclass('orderlines')]" position="replace">-->
+        <!--            <div style="font-size:13px;width:100%">-->
+        <!--                <table class="table table-bordered table-sm">-->
+        <!--                    <thead><tr>-->
+        <!--                        <th class="text-left">CANT.</th>-->
+        <!--                        <th class="text-left">DESCRIPCIÓN</th>-->
+        <!--                        <th class="text-left">PRECIO</th>-->
+        <!--                        <th class="text-right">MONTO</th>-->
+        <!--                    </tr></thead>-->
+        <!--                    <tr t-foreach="receipt.orderlines" t-as="line">-->
+        <!--                        <td class="text-left"><t t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"/></td>-->
+        <!--                        <td class="text-left"><t t-esc="line.product_name_wrapped[0]"/></td>-->
+        <!--                        <td style="text-align:right"><t t-esc="env.pos.format_currency_no_symbol(line.price_display_one)"/></td>-->
+        <!--                        <td style="text-align:right"><t t-esc="env.pos.format_currency_no_symbol(line.price_display)" /></td>-->
+        <!--                    </tr>-->
+        <!--&lt;!&ndash;                    <tfoot t-if="page['total_amount']">&ndash;&gt;-->
+        <!--&lt;!&ndash;                        <tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;                            <td></td>&ndash;&gt;-->
+        <!--&lt;!&ndash;                            <td></td>&ndash;&gt;-->
+        <!--&lt;!&ndash;                            <td></td>&ndash;&gt;-->
+        <!--&lt;!&ndash;                            <td class="text-right"><t t-esc="page['total_amount']" t-options="{'widget': 'monetary', 'display_currency': page['currency']}"/></td>&ndash;&gt;-->
+        <!--&lt;!&ndash;                        </tr>&ndash;&gt;-->
+        <!--&lt;!&ndash;                    </tfoot>&ndash;&gt;-->
+        <!--                </table>-->
+        <!--            </div>-->
+        <!--        </xpath>-->
+        <!--         <xpath expr="//div[hasclass('pos-receipt-amount')]" position="replace">-->
+        <!--             <div>TOTAL<span t-esc="env.pos.format_currency(receipt.total_with_tax)" class="pos-receipt-right-align"/></div>-->
+        <!--         </xpath>-->
+    </t>
+</templates>

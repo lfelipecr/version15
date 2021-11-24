@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_line_form_view_inherit" model="ir.ui.view">
+        <field name="name">accout.move.line.form.view.inherit.l10n_cr_accounting</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <field name="tax_audit" position="after">
+                <field name="discount_note" invisible="1"/>
+                <!--<field name="total_tax" invisible="1"/>-->
+            </field>
+        </field>
+    </record>
+</odoo>

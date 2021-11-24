@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="cabys_wizard" model="ir.ui.view">
+            <field name="name">cabys.wizard.wizard</field>
+            <field name="model">cabys.wizard</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="get_cabys" string="Obtener cabys" title="Obtener Cabys"
+                                icon="fa-upload"
+                                type="object" class="oe_highlight"/>
+                        <button string="Cancelar" class="oe_link" special="cancel" icon="fa-times-circle-o"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_cabys_wizard" model="ir.actions.act_window">
+            <field name="name">Procesar Cabys</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cabys.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="cabys_menu_wizard" name="CAByS Procesamiento" parent="account.account_management_menu" action="action_cabys_wizard"/>
+
+    </data>
+</odoo>

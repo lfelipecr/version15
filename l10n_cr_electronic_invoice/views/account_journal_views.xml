@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_form_view_inherit" model="ir.ui.view">
+        <field name="name">account.journal.form.view.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Electronic Invoice">
+                    <group>
+                        <field name="to_process"/>
+                    </group>
+                    <group attrs="{'invisible':['|', ('type', '!=', 'sale'), ('to_process', '=', False)]}">
+                        <group>
+                            <field name="FE_sequence_id" attrs="{
+                                'required':[('type', '=', 'sale'), ('to_process', '=', True)]
+                            }"/>
+                            <field name="TE_sequence_id" attrs="{
+                                'required':[('type', '=', 'sale'), ('to_process', '=', True)]
+                            }"/>
+                            <field name="FEE_sequence_id" attrs="{
+                                'required':[('type', '=', 'sale'), ('to_process', '=', True)]
+                            }"/>
+                        </group>
+                        <group>
+                            <field name="NC_sequence_id" attrs="{
+                                'required':[('type', '=', 'sale'), ('to_process', '=', True)]
+                            }"/>
+                            <field name="ND_sequence_id" attrs="{
+                                'required':[('type', '=', 'sale'), ('to_process', '=', True)]
+                            }"/>
+                        </group>
+                        <group>
+                            <field name="sucursal" attrs="{
+                                'required':[('type', '=', 'sale'), ('to_process', '=', True)]
+                            }"/>
+                            <field name="terminal" attrs="{
+                                'required':[('type', '=', 'sale'), ('to_process', '=', True)]
+                            }"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="sequence_id" string="Secuencia"/>
+                <field name="sequence_refund_id" string="Secuencia Rectificativa"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- factura de cliente -->
+    <record id="account_move_form_view_inherit_fecr_account" model="ir.ui.view">
+        <field name="name">account.move.form.view.inherit.fecr.account</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="payment_methods_id" attrs="{'invisible':[('tipo_documento', '!=', 'FEC')]}"/>
+                <field name="activity_id"/>
+            </field>
+            <xpath expr="//field[@name='line_ids']//tree//field[@name='name']" position="after">
+                <field name="categ_name" invisible="1"/>
+                <field name="product_code" invisible="1"/>
+                <field name="third_party_id" attrs="{'invisible':[('product_code', '!=', '04')]}"/>
+            </xpath>
+            <field name="fiscal_position_id" position="after">
+                <field name="tipo_documento"/>
+            </field>
+        </field>
+    </record>
+</odoo>

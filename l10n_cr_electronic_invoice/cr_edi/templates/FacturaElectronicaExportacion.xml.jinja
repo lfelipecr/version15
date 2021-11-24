@@ -1,0 +1,109 @@
+<FacturaElectronicaExportacion
+    xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.3/facturaElectronicaExportacion"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://www.hacienda.go.cr/ATV/ComprobanteElectronico/docs/esquemas/2016/v4.3/FacturaElectronicaExportacion_V4.3.xsd">
+    <Clave>{{document.number_electronic}}</Clave>
+    <CodigoActividad>{{activity_code}}</CodigoActividad>
+    <NumeroConsecutivo>{{document.number_electronic[21:41]}}</NumeroConsecutivo>
+    <FechaEmision>{{document.date_issuance}}</FechaEmision>
+    <Emisor>
+        <Nombre>{{issuer.name}}</Nombre>
+        <Identificacion>
+            <Tipo>{{issuer.identification_id.code}}</Tipo>
+            <Numero>{{issuer.vat}}</Numero>
+        </Identificacion>
+        <NombreComercial>{{issuer.commercial_name or "NA"}}</NombreComercial>
+        <Ubicacion>
+            <Provincia>{{issuer.state_id.code}}</Provincia>
+            <Canton>{{issuer.county_id.code}}</Canton>
+            <Distrito>{{issuer.district_id.code}}</Distrito>
+            <Barrio>{{issuer.neighborhood_id.code}}</Barrio>
+            <OtrasSenas>{{issuer.street or "NA"}}</OtrasSenas>
+        </Ubicacion>
+        <Telefono>
+            <CodigoPais>{{phone_obj_issuer.country_code}}</CodigoPais>
+            <NumTelefono>{{phone_obj_issuer.national_number}}</NumTelefono>
+        </Telefono>
+        <CorreoElectronico>{{issuer.email}}</CorreoElectronico>
+    </Emisor>
+    <Receptor>
+        <Nombre>{{receiver.name[:99]}}</Nombre>
+        <IdentificacionExtranjero>{{receiver.vat}}</IdentificacionExtranjero>
+        {% if phone_obj_receiver %}
+            <Telefono>
+                <CodigoPais>{{phone_obj_receiver.country_code}}</CodigoPais>
+                <NumTelefono>{{phone_obj_receiver.national_number}}</NumTelefono>
+            </Telefono>
+        {% endif %}
+        <CorreoElectronico>{{receiver.email}}</CorreoElectronico>
+    </Receptor>
+   <CondicionVenta>{{document.invoice_payment_term_id.sale_conditions_id.sequence}}</CondicionVenta>
+    <PlazoCredito>{{document.invoice_payment_term_id.line_ids[0].days}}</PlazoCredito>
+    <MedioPago>{{document.payment_method_id.sequence}}</MedioPago>
+   <DetalleServicio>
+        {% for line in lines %}
+        <LineaDetalle>
+            <NumeroLinea>{{line['numero_linea']}}</NumeroLinea>
+            <Codigo>{{line['codigo']}}</Codigo>
+            <Cantidad>{{line['cantidad']}}</Cantidad>
+            <UnidadMedida>{{line['unidad_medida']}}</UnidadMedida>
+            <Detalle>{{line['detalle']}}</Detalle>
+            <PrecioUnitario>{{line['precio_unitario']}}</PrecioUnitario>
+            <MontoTotal>{{line['monto_total']}}</MontoTotal>
+            {% if line['discount'] %}
+            <Descuento>
+                <MontoDescuento>{{line['monto_descuento']}}</MontoDescuento>
+                <NaturalezaDescuento>{{line['naturaleza_descuento']}}</NaturalezaDescuento>
+            </Descuento>
+            {% endif %}
+            <SubTotal>{{line['sub_total']}}</SubTotal>
+            {% for tax in line['impuestos'] %}
+            <Impuesto>
+                <Codigo>{{tax['codigo']}}</Codigo>
+                <CodigoTarifa>{{tax['codigo_tarifa']}}</CodigoTarifa>
+                <Tarifa>{{tax['tarifa']}}</Tarifa>
+                <Monto>{{tax['monto']}}</Monto>
+                {% if tax['tax'].tax_root %}
+                <Exoneracion>
+                    <TipoDocumento>{{receiver.type_exoneration.code}}</TipoDocumento>
+                    <NumeroDocumento>{{receiver.exoneration_number.numero_documento}}</NumeroDocumento>
+                    <NombreInstitucion>{{receiver.institution_name}}</NombreInstitucion>
+                    <FechaEmision>{{receiver.date_issue.strftime('%Y-%m-%dT00:00:00')+'-06:00'}}</FechaEmision>
+                    <PorcentajeExoneracion>{{tax['tax'].percentage_exoneration}}</PorcentajeExoneracion>
+                    <MontoExoneracion>{{(line['sub_total'] * (tax['tax'].percentage_exoneration / 100))|round(5)}}</MontoExoneracion>
+                </Exoneracion>
+                {% endif %}
+            </Impuesto>
+            {% endfor %}
+            <ImpuestoNeto>{{line['impuesto_neto']}}</ImpuestoNeto>
+            <MontoTotalLinea>{{line['monto_total_linea']}}</MontoTotalLinea>
+        </LineaDetalle>
+        {% endfor %}
+    </DetalleServicio>
+    <ResumenFactura>
+        <CodigoTipoMoneda>
+            <CodigoMoneda>{{document.currency_id.name}}</CodigoMoneda>
+            <TipoCambio>{{(currency_rate)|round(5)}}</TipoCambio>
+        </CodigoTipoMoneda>
+        <TotalServGravados>{{"%.5f"|format(amounts["service_taxed"])}}</TotalServGravados>
+        <TotalServExentos>{{"%.5f"|format(amounts["service_no_taxed"])}}</TotalServExentos>
+        <TotalServExonerado>{{"%.5f"|format(amounts["service_exempt"])}}</TotalServExonerado>
+        <TotalMercanciasGravadas>{{"%.5f"|format(amounts["product_taxed"])}}</TotalMercanciasGravadas>
+        <TotalMercanciasExentas>{{"%.5f"|format(amounts["product_no_taxed"])}}</TotalMercanciasExentas>
+        <TotalMercExonerada>{{"%.5f"|format(amounts["product_exempt"])}}</TotalMercExonerada>
+        <TotalGravado>{{"%.5f"|format(amounts["total_gravado"])}}</TotalGravado>
+        <TotalExento>{{"%.5f"|format(amounts["total_exento"])}}</TotalExento>
+        <TotalExonerado>{{"%.5f"|format(amounts["total_exonerado"])}}</TotalExonerado>
+        <TotalVenta>{{"%.5f"|format(amounts['total_venta'])}}</TotalVenta>
+        <TotalDescuentos>{{"%.5f"|format(amounts["discount"])}}</TotalDescuentos>
+        <TotalVentaNeta>{{"%.5f"|format(amounts['venta_neta'])}}</TotalVentaNeta>
+        <TotalImpuesto>{{"%.5f"|format(amounts['total_impuesto'])}}</TotalImpuesto>
+        <TotalOtrosCargos>{{"%.5f"|format(amounts["other_charges"])}}</TotalOtrosCargos>
+        <TotalComprobante>{{"%.5f"|format(amounts['total_comprobante'])}}</TotalComprobante>
+    </ResumenFactura>
+    <Otros>
+        <OtroTexto>{{notes}}</OtroTexto>
+    </Otros>
+</FacturaElectronicaExportacion>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_exoneration_form" model="ir.ui.view">
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_post'][1]" position="after">
+                <field name="einvoice_fields_add" invisible="1"/> <!--Todo: Campo nuevo-->
+                <field name="is_expired" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_post'][2]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|','|','|','|','|',('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type','=','entry'),('is_expired','=', True),
+                    ('xml_comprobante','!=',False),'&amp;',('electronic_sequence','!=',False),('move_type','=','out_invoice')]}
+                </attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="attrs">
+                   {'invisible' : ['|',('show_reset_to_draft_button', '=', False),
+                    '&amp;', ('move_type','!=','entry'),
+                    '|',('state_tributacion','=','aceptado'),('state_send_invoice','=','aceptado')]}
+                </attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-success text-center o_form_header"
+                     attrs="{'invisible': [('is_expired', '!=', True)]}" role="status">
+                    <a class="close" data-dismiss="alert" href="#" aria-label="Close">x</a>
+                    <div attrs="{'invisible': [('is_expired', '!=', True)]}">
+                        <strong>El cliente perteneciente a este documento está afecto a exoneración, sin embargo la
+                            expiración de la misma,
+                            no permite generar la factura correspondiente.
+                        </strong>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='payment_reference']" position="after">
+                <field name="has_exoneration" invisible="1"/>
+                <field name="due_exoneration" invisible="1"/>
+                <field name="partner_tax_id" invisible="1"/>
+                <field name="apply_discount_global" string="Aplicar descuento" style="color: #9b00b3"
+                       groups="product.group_discount_per_so_line"
+                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice','out_refund'))]}"/>
+                <label for="percentage_discount_global" string="Descuento general"
+                       attrs="{'invisible': [('apply_discount_global', '=',False)]}"/>
+                <div attrs="{'invisible': [('apply_discount_global', '=',False)]}">
+                    <field name="percentage_discount_global" class="mb-0 oe_inline text-center"
+                           placeholder="*Ingrese descuento."/>
+                    <span>%</span>
+                    <button name="calc_discount" type="object" string="Calcular" class="btn btn-link text-primary"
+                            icon="fa-caret-right"/>
+                    <!--                    <a role="button"  name="calc_discount" string="Calcular" type="object" icon="fa-caret-right" class="btn btn-link pt-0"></a>-->
+                    <!--                    <button name="calc_discount" string="Calcular" type="object" icon="fa-caret-right" class="btn btn-link pt-0" />-->
+                </div>
+                <field name="amount_discount" string="Total descontado" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="before">
+                <field name="change_color" invisible="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="before">
+                <div>
+                    <field name="re_calcule" invisible="1"/>
+                    <div class="alert alert-info text-center" attrs="{'invisible': [('re_calcule', '=', False)]}"
+                         role="alert">
+                        <strong>Asegúrese de calcular el descuento total nuevamente, puesto que hemos econtrado
+                            inconfruencias entre el total
+                            de porcentaje a descontar y la suma de las lineas de descuento.
+                        </strong>
+                    </div>
+                </div>
+
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
+                <attribute name="decoration-danger">change_color == True</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='amount_total']" position="before">
+                <field name="amount_gravada" string="Total gravado" class="oe_subtotal_footer_separator"
+                       force_save="1" readonly="1" style="color:#00A09D; font-size: 12px"
+                       attrs="{'invisible': [('partner_tax_id', '=', False)]}"/>
+                <field name="amount_exonerated" string="Total exonerado"
+                       force_save="1" readonly="1" style="color:#cf6fd5; font-size: 12px"
+                       attrs="{'invisible': [('partner_tax_id', '=', False)]}"/>
+                <field name="amount_discount" string="Total descuento"
+                       force_save="1" readonly="1" style="color:#00A09D; font-size: 12px"
+                       attrs="{'invisible': [('apply_discount_global', '=', False)]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='narration']" position="attributes">
+                <attribute name="string">Agregue alguna nota ...</attribute>
+            </xpath>
+
+            <xpath expr="//group[@id='other_tab_group']" position="inside">
+                <group string="Datos comerciales"
+                       name="commercial_data"
+                       groups="account.group_account_manager"
+                       attrs="{'invisible': [('einvoice_fields_add', '=', False)]}">
+                    <field name="order_purchase"/>
+                    <field name="note_remision"/>
+                </group>
+            </xpath>
+
+             <xpath expr="//group[@id='header_right_group']" position="inside">
+                <field name="iva_condition"   attrs="{'invisible': [('move_type', 'not in', ('in_invoice','in_refund'))]}"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

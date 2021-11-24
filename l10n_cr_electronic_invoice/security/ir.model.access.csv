@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_IdentificationType,identification.type,model_identification_type,account.group_account_invoice,1,0,0,0
+access_CodeTypeProduct,code.type.product,l10n_cr_accounting.model_code_type_product,account.group_account_invoice,1,0,0,0
+access_PaymentMethods,payment.methods,l10n_cr_accounting.model_payment_methods,account.group_account_invoice,1,0,0,0
+access_SaleConditions,sale.conditions,l10n_cr_accounting.model_sale_conditions,account.group_account_invoice,1,0,0,0
+access_ReferenceCode,reference.code,l10n_cr_accounting.model_reference_code,account.group_account_invoice,1,0,0,0
+access_resolution,access_resolution,model_resolution,base.group_user,1,0,0,0
+access_AutEx,aut.ex,model_aut_ex,account.group_account_invoice,1,1,1,0
+access_economic_activity,economic.activity,l10n_cr_accounting.model_economic_activity,account.group_account_invoice,1,1,1,0
+access_ReferenceDocument,reference.document,model_reference_document,account.group_account_invoice,1,1,1,1
+access_res_partner_tax,res.partner.tax,model_res_partner_tax,base.group_user,1,1,1,1
+
+access_account_move_import_config,account.move.import.config,model_account_move_import_config,account.group_account_invoice,1,1,1,1
+access_account_report_iva_wizard,account.report.iva.wizard,model_account_report_iva_wizard,account.group_account_invoice,1,1,1,1

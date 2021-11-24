@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--Todo: REPORT IVA-->
+        <record id="view_account_report_iva_wizard" model="ir.ui.view">
+            <field name="name">account.report.iva.wizard</field>
+            <field name="model">account.report.iva.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group attrs="{'invisible': [('xls_filename','!=',False)]}">
+                            <field name="company_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="journal_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]" options="{'no_create': True}"/>
+                            <field name="activity_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                        <group attrs="{'invisible': [('xls_filename','!=',False)]}">
+                            <div class="row">
+                                <div class="col-6">
+                                    <group>
+                                        <field name="state_odoo" required="True"/>
+                                        <field name="state_hacienda" required="True"/>
+                                    </group>
+                                </div>
+                                <div class="col-6">
+                                    <group>
+                                        <field name="type_date" string="Fecha por:" required="1"/>
+                                        <label for="selected_month" string="Mes/Año " attrs="{'invisible': [('type_date','!=','month')]}"/>
+                                        <div attrs="{'invisible': [('type_date','!=','month')]}">
+                                            <field name="selected_month" class="oe_inline" force_save="1"
+                                                   attrs="{'required': [('type_date','=','month')]}"/>
+                                            /
+                                            <field name="selected_year" class="oe_inline" force_save="1" readonly="1"/>
+                                        </div>
+                                        <label for="selected_range_from" string="Desde/Hasta" attrs="{'invisible': [('type_date','!=','range')]}"/>
+                                        <div attrs="{'invisible': [('type_date','!=','range')]}">
+                                            <field name="selected_range_from" class="oe_inline" force_save="1" style="width: 42% !important ;"
+                                                   attrs="{'required': [('type_date','=','range')]}"/>
+                                            /
+                                            <field name="selected_range_to" class="oe_inline" force_save="1" style="width: 42% !important;"
+                                                   attrs="{'required': [('type_date','=','range')]}"/>
+                                        </div>
+                                    </group>
+                                </div>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': [('xls_filename','!=',False)]}">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-left">
+                                        <h3>Compras</h3>
+                                        <group>
+                                            <field name="purchase_type" required="1"/>
+                                            <field name="purchase_national" string="Tipo Transacción" required="1"/>
+                                            <field name="purchase_iva_condition" string="Condición IVA" required="1"/>
+                                            <field name="purchase_tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id),('type_tax_use','=','purchase')]"
+                                                   options="{'no_create': True}"/>
+
+                                        </group>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-left">
+                                        <h3>Ventas</h3>
+                                        <group>
+                                            <field name="sale_type" required="1"/>
+                                            <field name="sale_national" string="Tipo Transacción" required="1"/>
+                                            <field name="sale_iva_condition" string="Condición IVA" required="1"/>
+                                            <field name="sale_tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id),('type_tax_use','=','sale')]"
+                                                   options="{'no_create': True}"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': [('xls_filename','=',False)]}">
+                            <field name="xls_filename" invisible="1"/>
+                             <div attrs="{'invisible': [('xls_filename','=', False)]}">
+                                <p>
+                                    <i>El reporte está listo para ser descargado:
+                                        <field name="xls_file" filename="xls_filename" nolabel="1"/>
+                                    </i>
+                                </p>
+                            </div>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="excel_report" string="Generar Excel" title="Generar excel" icon="fa-check-circle-o" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('xls_filename','!=',False)]}"/>
+                        <button string="Cerrar" class="oe_link" special="cancel" icon="fa-times-circle-o"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_maccount_report_iva_wizard" model="ir.actions.act_window">
+            <field name="name">Reporte IVA</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.report.iva.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Hacienda" parent="account.menu_finance_reports" sequence="1" id="hacienda_menu_item">
+            <menuitem id="hacienda_menu_item_report_iva" name="Reporte IVA" action="action_maccount_report_iva_wizard" sequence="10"/>
+        </menuitem>
+
+    </data>
+</odoo>
